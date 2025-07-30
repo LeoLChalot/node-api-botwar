@@ -9,12 +9,12 @@ const port = process.env.PORT || 3000;
 app.use(cors({
     origin: 'https://bot.gogokodo.com',
     methods: 'GET,POST',
-    credentials: false,
+    credentials: true,
     optionsSuccessStatus: 204
 }));
 
 app.get('/', (req, res) => {
-    res.status(200).json({ message: "Welcome bot trainer" });
+    res.status(204).json({ message: "Welcome bot trainer" });
 })
 
 /*  
@@ -28,7 +28,7 @@ app.get('/action', (req, res) => {
     const state = req.headers['x-game-state'];
     console.log(state ? state : 'aucun état reçu');
     const response = { "move": "UP", "action": "COLLECT" };
-    res.status(200).json(response);
+    res.status(204).json(response);
 })
 
 app.listen(port, () => {
