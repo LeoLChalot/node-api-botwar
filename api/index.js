@@ -1,7 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors')
 const bodyParser = require('body-parser');
-const path = require('path');
 const app = express();
 
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
@@ -33,5 +33,3 @@ app.get('/action', (req, res) => {
 app.listen(port, () => {
     console.log(`App listening on port ${port}`)
 });
-
-module.exports = app;
