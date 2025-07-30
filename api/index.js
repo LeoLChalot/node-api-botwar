@@ -1,10 +1,17 @@
 require('dotenv').config();
 const express = require('express');
-// const cors = require('cors')
+const cors = require('cors')
 const app = express();
 
 const port = process.env.PORT || 3000;
 
+
+// 'localhost' pour 'vercel dev' et 'https://bot.gogokodo.com' pour 'vercel
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "https://bot.gogokodo.com"],
+  })
+);
 
 
 app.get('/', (req, res) => {
@@ -29,4 +36,10 @@ app.listen(port, () => {
     console.log(`App listening on port ${port}`)
 });
 
+// Exporter app pour répondre aux éxigeances de Vercel
+// https://vercel.com/guides/using-express-with-vercel#4.-initialize-an-express.js-server
 module.exports = app;
+
+
+// Pour la configuration de vercel.json, utiliser rewrite{[]}
+// { "version": 2, "rewrites": [{ "source": "/(.*)", "destination": "/api" }] }
