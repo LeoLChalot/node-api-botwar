@@ -1,4 +1,4 @@
-node_modules
-exemple.json
-.vercel
-vercel.json
+api/node_modules
+exemple.json    
+api/.vercel
+api.vercel.json
