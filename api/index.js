@@ -1,6 +1,10 @@
 const express = require('express');
 const cors = require('cors')
+const bodyParser = require('body-parser');
+const path = require('path');
 const app = express();
+
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 const port = process.env.PORT || 3000;
 
@@ -9,7 +13,7 @@ app.use(cors({
 }));
 
 app.get('/', (req, res) => {
-    res.json({ message: "Welcome bot trainer" }).status(200);
+    res.status(200).json({ message: "Welcome bot trainer" });
 })
 
 /*  
@@ -29,3 +33,5 @@ app.get('/action', (req, res) => {
 app.listen(port, () => {
     console.log(`App listening on port ${port}`)
 });
+
+module.exports = app;

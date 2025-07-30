@@ -4,7 +4,7 @@
   "description": "L'API permettant (théoriquement) de sortir vainqueur de l'arêne BotWar ! ",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "nodemon api/index.js",
     "test": "jest"
   },
   "repository": {
