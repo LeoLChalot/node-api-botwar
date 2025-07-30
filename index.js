@@ -17,11 +17,11 @@ app.get('/', (req, res, next) => {
 *   @param {object} state - L'état de la partie
 *   @return {JSON} action - L'action à effectuer
 */
-app.post('/action', (req, res) => {
-    const state = req.body.state;
+app.get('/action', (req, res) => {
     console.log('/action')
+    const state = req.headers['x-game-state'];
     console.log(state ? state : 'aucun état reçu');
-    const response = {"move": "UP", "action": "COLLECT"};
+    const response = { "move": "UP", "action": "COLLECT" };
     res.json(response).status(200);
 })
 
