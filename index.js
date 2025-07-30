@@ -21,6 +21,8 @@ app.post('/action', (req, res) => {
     const state = req.body.state;
     console.log('/action')
     console.log(state ? state : 'aucun état reçu');
+    const response = {"move": "UP", "action": "COLLECT"};
+    res.json(response).status(200);
 })
 
 app.listen(port, () => {
