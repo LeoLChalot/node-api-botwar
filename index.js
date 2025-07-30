@@ -8,7 +8,7 @@ app.use(cors({
   origin: 'https://bot.gogokodo.com'
 }));
 
-app.get('/', (req, res, next) => {
+app.get('/api', (req, res, next) => {
     res.send('Hello World!');
 });
 
@@ -19,9 +19,9 @@ app.get('/', (req, res, next) => {
 *   @param {object} state - L'état de la partie
 *   @return {JSON} action - L'action à effectuer
 */
-app.get('/action', (req, res) => {
+app.get('/api/action', (req, res) => {
     console.log('/action')
-    const state = req.headers['x-game-state'];
+    const state = req.headers['X-Game-State'];
     console.log(state ? state : 'aucun état reçu');
     const response = { "move": "UP", "action": "COLLECT" };
     res.json(response).status(200);
