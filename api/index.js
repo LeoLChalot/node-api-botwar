@@ -6,14 +6,12 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // CORS
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://bot.gogokodo.com'); 
-
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-game-state');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  next();
-});
+app.use(cors({
+    origin: 'https://bot.gogokodo.com',
+    methods: 'GET,POST',
+    credentials: false,
+    optionsSuccessStatus: 204
+}));
 
 app.get('/', (req, res) => {
     res.status(200).json({ message: "Welcome bot trainer" });
