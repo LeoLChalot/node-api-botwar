@@ -2,3 +2,4 @@ node_modules
 exemple.json    
 .vercel
 .env*.local
+static/*

@@ -1,12 +1,17 @@
 // require('dotenv').config();
 const express = require('express');
-const cors = require('cors')
+const cors = require('cors');
 const app = express();
 const headers = require('./middleware/headers');
 
-const getStatut = require('./functions/getStatut')
+const validerStatut = require('./functions/data_validation/validerStatut');
+const getStatut = require('./functions/data_getter/getStatut');
+const getGrille = require('./functions/data_getter/getGrille');
+const getCoordonneesBot = require('./functions/data_getter/getCoordonneesBot');
+const getCasesAdjacentes = require('./functions/data_getter/getCasesAdjacentes');
 
 const port = process.env.PORT || 3000;
+const FILENAME = require('path').basename(__filename);
 
 // Configuration CORS
 const corsOptions = {
@@ -24,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
     res.status(200).json({ message: "Welcome bot trainer" });
-})
+});
 
 /*  
 *   # Reçoit l'état de la partie
@@ -33,68 +38,34 @@ app.get('/', (req, res) => {
 *   @return {JSON} action - L'action à effectuer
 */
 app.get('/action', headers, (req, res) => {
-
+    let statut;
+    let statutIsValid
     try {
-        const statut = getStatut(req.headers['x-game-state'])
+        statut = getStatut(req.headers['x-game-state']);
+        statutIsValid = validerStatut(statut);
     }
-    catch (e){
-        throw(e);
-    }
- 
-    const tailleGrille = 5;
-    const mouvements = [
-        { x: 0, y: -1 },
-        { x: 0, y: 1 },
-        { x: -1, y: 0 },
-        { x: 1, y: 0 }
-    ];
-    const casesAdjacentes = [];
-    if (statut) {
-
-        // On récupère les coordonnées actuelles du bot
-        const botCoordonnes = { x: statut['you']['x'], y: statut['you']['y'] }
-
-        /*
-        * Ensemble de la logique de reflexion du bot
-        * On vérifie à la réception de l'état de la partie si :
-        * - la case de coordonnées (x, y+1)
-        * - la case de coordonnées (x, y-1)
-        * - la case de coordonnées (x+1, y)
-        * - la case de coordonnées (x-1, y)
-        */
-        for (const mouvement of mouvements) {
-            const x = botCoordonnes.x + mouvement.x;
-            const y = botCoordonnes.y + mouvement.y;
-
-            // Vérifier si la nouvelle position est possible (intérieur  de la grille)
-            if (x >= 0 && x < tailleGrille && y >= 0 && y < tailleGrille) {
-                casesAdjacentes.push({ x: x, y: y });
-            }
-        }
-
-        // Vérifier le contenu des cases adjacentes
-
-        console.log("Cases adjacentes :", casesAdjacentes);
+    catch (e) {
+        throw (e.message);
     }
 
+    const coordoneesBot = getCoordonneesBot(statut);
+    const grille = getGrille(statut);
+    const casesAdjacentes = getCasesAdjacentes(grille, coordoneesBot);
 
-    // Cases disponibles
-    // const botCoordonnees = json(state)
+    const informations = {
+        "coordonnées du bot": coordoneesBot,
+        "Dimensions de la grille": grille,
+        "Cases adjacentes": casesAdjacentes
+    };
 
-    /*
-    * Chaque case peut contenir :
-    * - Une entité "bot"
-    * - Une entité "point"
-    * - Une entité "bomb" 
-    */
-
+    console.log(informations);
 
     const response = { "move": "UP", "action": "COLLECT" };
     res.status(200).json(response);
-})
+});
 
 app.listen(port, () => {
-    console.log(`App listening on port ${port}`)
+    console.log(`App listening on port ${port}`);
 });
 
 // Exporter app pour répondre aux éxigeances de Vercel
