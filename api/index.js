@@ -1,17 +1,11 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors')
+// const cors = require('cors')
 const app = express();
 
 const port = process.env.PORT || 3000;
 
-// CORS
-app.use(cors({
-    origin: 'https://bot.gogokodo.com',
-    methods: 'GET,POST',
-    credentials: true,
-    optionsSuccessStatus: 204
-}));
+
 
 app.get('/', (req, res) => {
     res.status(204).json({ message: "Welcome bot trainer" });
