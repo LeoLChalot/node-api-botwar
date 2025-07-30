@@ -4,9 +4,9 @@ const app = express();
 
 const port = process.env.PORT || 3000;
 
-
-
-app.use(cors());
+app.use(cors({
+    "allow-headers": ["x-game-state", "content-type"]
+}));
 
 app.get('/', (req, res) => {
     res.json({ message: "Welcome bot trainer" }).status(200);
