@@ -6,18 +6,18 @@ const port = 3000;
 
 
 
-const whitelist = ['https://bot.gogokodo.com']
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
+// const whitelist = ['https://bot.gogokodo.com']
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     if (whitelist.indexOf(origin) !== -1) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error('Not allowed by CORS'))
+//     }
+//   }
+// }
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.get('/', (req, res) => {
     res.json({message: "Welcome bot trainer"}).status(200);
@@ -34,7 +34,7 @@ app.get('/action', (req, res) => {
     const state = req.headers['X-Game-State'];
     console.log(state ? state : 'aucun état reçu');
     const response = { "move": "UP", "action": "COLLECT" };
-    res.json(response).status(200);
+    res.header('Access-Control-Allow-Origin', 'https://bot.gogokodo.com').json(response).status(200);
 })
 
 app.listen(port, () => {
