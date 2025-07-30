@@ -77,13 +77,13 @@ Les facteurs d'influences sont les suivants :
 - La case ne contient rien (Dans ce cas, si rien de plus intéressant, on créer un embranchement et on relance la logique)
 
 A chaque tour, plusieurs cas sont posibles :
-(1) Aucune des cases adjacentes ne contient d'item.
-(2) Au moins une des cases adjacentes contient un point.
-(3) Au moins une des cases adjacentes contient une bombe.
+- (1) Aucune des cases adjacentes ne contient d'item.
+- (2) Au moins une des cases adjacentes contient un point.
+- (3) Au moins une des cases adjacentes contient une bombe.
 
-Dans le cas (1), on exécute la fonction sur l'ensemble des cases adjacentes à t+1 (on donne du poids au meilleur itinéraire)
-Dans le cas (2), on exécute la fonction une nouvelle fois en prenant les coordonnées de la case du point pour s'assurer qu'au moins une case à t+1 permettra d'effectuer un nouveau coup.
-Dans le cas (3), on exécute la fonction sur le case ne contenant pas de bombe à t+1
+- Dans le cas (1), on exécute la fonction sur l'ensemble des cases adjacentes à t+1 (on donne du poids au meilleur itinéraire)
+- Dans le cas (2), on exécute la fonction une nouvelle fois en prenant les coordonnées de la case du point pour s'assurer qu'au moins une case à t+1 permettra d'effectuer un nouveau coup.
+- Dans le cas (3), on exécute la fonction sur le case ne contenant pas de bombe à t+1
 
 Un itinéraire est caractérisé par :
 - un poids (plus la valeur est basse, mieux c'est)
