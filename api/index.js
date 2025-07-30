@@ -5,9 +5,12 @@ const app = express();
 
 const port = process.env.PORT || 3000;
 
-app.use(cors({
-    "allow-headers": ["x-game-state", "content-type"]
-}));
+const corsOptions = {
+      origin: 'https://bot.gogokodo.com',
+      credentials: true,
+    };
+
+app.use(cors(corsOptions));
 
 app.get('/', (req, res) => {
     res.status(200).json({ message: "Welcome bot trainer" });
