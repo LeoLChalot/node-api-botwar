@@ -9,6 +9,13 @@ const getStatut = require('./functions/data_getter/getStatut');
 const getGrille = require('./functions/data_getter/getGrille');
 const getCoordonneesBot = require('./functions/data_getter/getCoordonneesBot');
 const getCasesAdjacentes = require('./functions/data_getter/getCasesAdjacentes');
+const parcourirGrille = require('./functions/data_getter/parcourirGrille');
+const getCasesAPoints = require('./functions/data_getter/getCasesAPoints');
+const getCasesABombes = require('./functions/data_getter/getCasesABombes');
+const getCaseBot = require('./functions/data_getter/getCaseBot');
+const mouvement = require('./functions/mouvement');
+
+
 
 const port = process.env.PORT || 3000;
 const FILENAME = require('path').basename(__filename);
@@ -39,7 +46,7 @@ app.get('/', (req, res) => {
 */
 app.get('/action', headers, (req, res) => {
     let statut;
-    let statutIsValid
+    let statutIsValid;
     try {
         statut = getStatut(req.headers['x-game-state']);
         statutIsValid = validerStatut(statut);
@@ -50,17 +57,31 @@ app.get('/action', headers, (req, res) => {
 
     const coordoneesBot = getCoordonneesBot(statut);
     const grille = getGrille(statut);
+    const detailGrille = parcourirGrille(statut);
     const coordoneesCasesAdjacentes = getCasesAdjacentes(grille, coordoneesBot);
+
 
     const informations = {
         "coordonnées du bot": coordoneesBot,
         "Dimensions de la grille": grille,
+        "Mega Point": statut["megaPoint"],
         "Cases adjacentes": coordoneesCasesAdjacentes
     };
 
+    console.table(detailGrille);
     console.log(informations);
 
-    const response = { "move": "UP", "action": "COLLECT" };
+    // Les case que je souhaite cibler
+    const casesAPoints = getCasesAPoints(detailGrille);
+    const casesABombes = getCasesABombes(detailGrille);
+    const caseBot = getCaseBot(detailGrille);
+
+    console.table(casesAPoints);
+    console.table(casesABombes);
+    console.table(caseBot);
+
+    const response = mouvement(caseBot, casesAPoints, casesABombes)
+
     res.status(200).json(response);
 });
 

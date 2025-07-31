@@ -98,3 +98,105 @@ Le poids est calculé de la façon suivante :
 ![alt text](static/images/schema-recursif-light.png)
 
 Le schéma sera ammené à évoluer
+
+___ 
+
+Le calcul de la distance entre deux points sera géré avec la [méthode Manhattan](https://fr.wikipedia.org/wiki/Distance_de_Manhattan) qui permet de définir le nombre de déplacements entre deux points d'un plan 2D. (bleu, rouge & jaune)
+
+![alt text](static/images/distance-manhattan.png)
+
+$ d(a, b) = ∣Xb−Xa∣+∣Yb−Ya∣ $
+
+### Récupérer le détail de la grille
+En récupérant le header X-Game-State, voici l'aggrégation que l'on peut obtenir avant la planification de l'itinéraire
+
+```bash
+## Détail des cellules de la grille
+┌─────────┬───┬───┬───────┬───────┬───────┬─────────────┬───────────┐
+│ (index) │ x │ y │ bot   │ point │ bomb  │ positionBot │ megaPoint │
+├─────────┼───┼───┼───────┼───────┼───────┼─────────────┼───────────┤
+│ 0       │ 0 │ 0 │ false │ false │ false │ false       │ false     │
+│ 1       │ 1 │ 0 │ false │ false │ false │ false       │ false     │
+│ 2       │ 2 │ 0 │ false │ false │ false │ false       │ true      │
+│ 3       │ 3 │ 0 │ false │ true  │ false │ false       │ false     │
+│ 4       │ 4 │ 0 │ false │ false │ false │ false       │ false     │
+│ 5       │ 0 │ 1 │ false │ false │ false │ false       │ false     │
+│ 6       │ 1 │ 1 │ false │ true  │ false │ false       │ false     │
+│ 7       │ 2 │ 1 │ false │ false │ false │ false       │ false     │
+│ 8       │ 3 │ 1 │ false │ false │ false │ false       │ false     │
+│ 9       │ 4 │ 1 │ false │ false │ true  │ false       │ false     │
+│ 10      │ 0 │ 2 │ false │ false │ false │ false       │ false     │
+│ 11      │ 1 │ 2 │ false │ false │ false │ false       │ false     │
+│ 12      │ 2 │ 2 │ false │ false │ false │ true        │ false     │
+│ 13      │ 3 │ 2 │ false │ false │ false │ false       │ false     │
+│ 14      │ 4 │ 2 │ false │ false │ false │ false       │ false     │
+│ 15      │ 0 │ 3 │ false │ false │ false │ false       │ false     │
+│ 16      │ 1 │ 3 │ false │ false │ false │ false       │ false     │
+│ 17      │ 2 │ 3 │ false │ false │ false │ false       │ false     │
+│ 18      │ 3 │ 3 │ false │ false │ false │ false       │ false     │
+│ 19      │ 4 │ 3 │ false │ true  │ false │ false       │ false     │
+│ 20      │ 0 │ 4 │ false │ false │ true  │ false       │ false     │
+│ 21      │ 1 │ 4 │ false │ false │ false │ false       │ false     │
+│ 22      │ 2 │ 4 │ false │ false │ false │ false       │ false     │
+│ 23      │ 3 │ 4 │ false │ false │ false │ false       │ false     │
+│ 24      │ 4 │ 4 │ false │ false │ false │ false       │ false     │
+└─────────┴───┴───┴───────┴───────┴───────┴─────────────┴───────────┘
+## Cases à points
+┌─────────┬───┬───┬─────┬───────┬──────┬─────────────┬───────────┐
+│ (index) │ x │ y │ bot │ point │ bomb │ positionBot │ megaPoint │
+├─────────┼───┼───┼─────┼───────┼──────┼─────────────┼───────────┤
+│ 0       │ 2 │ 0 │ 0   │ 0     │ 0    │ 0           │ 1         │
+│ 1       │ 3 │ 0 │ 0   │ 1     │ 0    │ 0           │ 0         │
+│ 2       │ 1 │ 1 │ 0   │ 1     │ 0    │ 0           │ 0         │
+│ 3       │ 4 │ 3 │ 0   │ 1     │ 0    │ 0           │ 0         │
+└─────────┴───┴───┴─────┴───────┴──────┴─────────────┴───────────┘
+## Cases à bombes
+┌─────────┬───┬───┬─────┬───────┬──────┬─────────────┬───────────┐
+│ (index) │ x │ y │ bot │ point │ bomb │ positionBot │ megaPoint │
+├─────────┼───┼───┼─────┼───────┼──────┼─────────────┼───────────┤
+│ 0       │ 4 │ 1 │ 0   │ 0     │ 1    │ 0           │ 0         │
+│ 1       │ 0 │ 4 │ 0   │ 0     │ 1    │ 0           │ 0         │
+└─────────┴───┴───┴─────┴───────┴──────┴─────────────┴───────────┘
+## Position du bot à l'instant (t)
+┌─────────┬───┬───┬─────┬───────┬──────┬─────────────┬───────────┐
+│ (index) │ x │ y │ bot │ point │ bomb │ positionBot │ megaPoint │
+├─────────┼───┼───┼─────┼───────┼──────┼─────────────┼───────────┤
+│ 0       │ 2 │ 2 │ 0   │ 0     │ 0    │ 1           │ 0         │
+└─────────┴───┴───┴─────┴───────┴──────┴─────────────┴───────────┘
+
+```
+## Une fois ces tableaux obtenus
+
+1. On trouve le point le plus proche
+2. On dirige le bot tour par tour jusqu'à ce point
+3. Si la case suivante contient une bombe :
+    - On utilise l'axe perpendiculaire pour choisir entre l'une des deux options (si je vais vers le haut, et qu'une bombe se trouve sur le chemin, il faudra impérativement tourner à droit ou à gauche)
+    - avant de tourner, on vérifie que la case est accessible
+    - si aucune case n'est accessible, on fait demi tour
+
+```bash
+## Distance Manhattan
+┌─────────┬────────────────┬─────────────┬──────────┐
+│ (index) │ coordonnees    │ type        │ distance │
+├─────────┼────────────────┼─────────────┼──────────┤
+│ 0       │ { x: 2, y: 0 } │ 'megaPoint' │ 2        │
+│ 1       │ { x: 3, y: 0 } │ 'point'     │ 3        │
+│ 2       │ { x: 1, y: 1 } │ 'point'     │ 2        │
+│ 3       │ { x: 4, y: 3 } │ 'point'     │ 3        │
+└─────────┴────────────────┴─────────────┴──────────┘
+```
+
+Je choisi l'élement le plus proche => Element(x: 2, y: 0)
+Je récupère la position du bot => Bot(x: 2, y: 2)
+
+Les mouvements pour y arriver sont : 
+Mouvement(B(x)-E(x), B(y)-E(y)) => (0, 2)
+
+Soit, 2 cases vers le haut.
+
+
+
+## Tests en continu
+Tous les tests sont automatiquement exécutés à chaque `push` sur n'importe quelle branche
+
+![alt text](static/images/tests-action.png)
