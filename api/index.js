@@ -50,12 +50,12 @@ app.get('/action', headers, (req, res) => {
 
     const coordoneesBot = getCoordonneesBot(statut);
     const grille = getGrille(statut);
-    const casesAdjacentes = getCasesAdjacentes(grille, coordoneesBot);
+    const coordoneesCasesAdjacentes = getCasesAdjacentes(grille, coordoneesBot);
 
     const informations = {
         "coordonnées du bot": coordoneesBot,
         "Dimensions de la grille": grille,
-        "Cases adjacentes": casesAdjacentes
+        "Cases adjacentes": coordoneesCasesAdjacentes
     };
 
     console.log(informations);

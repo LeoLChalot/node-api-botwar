@@ -18,7 +18,6 @@ function getStatut(xGameStateHeader) {
     if (typeof xGameStateHeader !== "string") {
         throwError(FILENAME, `Le type de X-Game-State n'est pas correct`);
     }
-
     let statut;
     try {
         statut = JSON.parse(xGameStateHeader);
