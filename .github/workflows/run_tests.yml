@@ -1,0 +1,22 @@
+name: Exécution des tests
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Je récupère mon repos
+        uses: actions/checkout@v4
+
+      - name: Utiliser la version 22 de node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Installation des dépendances
+        run: npm install
+
+      - name: Exécution des tests
+        run: npm test
